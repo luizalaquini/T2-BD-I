@@ -24,3 +24,4 @@ Part 1:
     `docker run -p 49160:8080 -d --name mycontainer <your username>/boca-api`
     `docker run -p 49160:8080 --rm --name mycontainer <your username>/boca-api`
 - [ok] Stop all running containers;
+
