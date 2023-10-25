@@ -1,2 +1,6 @@
 
-boca-docker/
+# descomentar essa linha para ignorar a pasta boca-docker ao subir para o git (caso queira)
+# boca-docker/
+
+# descomentar essa linha para ignorar a pasta node_modules ao subir para o git (caso queira)
+boca-docker/node_modules/
