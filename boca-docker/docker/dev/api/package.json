@@ -1,0 +1,15 @@
+{
+  "name": "bdteste",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author_1": "Dionatas Brito <dionatas.santtos@gmail.com>",
+  "author_2": "Luiza Laquini <luizablaquini@hotmail.com>",
+  "license": "Apache 2.0",
+   "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.8.0"
+  }
+}
