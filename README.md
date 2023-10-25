@@ -1,6 +1,6 @@
 # UFES20232BDCOMP
 
-### Premissa: Ter o docker instalado na máquina
+### Premissa: Ter o docker instalado na máquina e no  diretório `./boca-docker/docker/dev/api` use o comando  `npm install`
 ### 1° etapa - Executar os Containers
 
 -   Do passo 1: 
