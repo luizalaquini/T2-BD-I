@@ -1,0 +1,27 @@
+Part 1:
+
+- [ok] Clone or fork the boca-docker repository (https://github.com/joaofazolo/boca-docker);
+- [ok] Create a folder named `api` in `./boca-docker/docker/dev` and make it the current work directory (use cd);
+- [ok] Create a `package.json` file (https://nodejs.org/en/docs/guides/nodejs-docker-webapp#create-the-nodejs-app);
+- [ok] Run: `npm install`;
+- [ok] Create a `server.js` file (https://nodejs.org/en/docs/guides/nodejs-docker-webapp#create-the-nodejs-app);
+- [ok] Run the command `npm start` and using a web browser visit http://localhost:8080. Ctrl+C to stop the service;
+- [ok] Create a `Dockerfile` file (https://nodejs.org/en/docs/guides/nodejs-docker-webapp#creating-a-dockerfile);
+- [ok] Create a `.dockerignore` file (https://nodejs.org/en/docs/guides/nodejs-docker-webapp#dockerignore-file);
+- [ok] List the existing Docker images on localhost: `docker images`;
+- [ok] Build your Docker image: `docker build . -t <your username>/boca-api`;
+- [ok] Again: `docker images`;
+- [ok] List containers: `docker container ls -a`
+- [ok] Run your image: `docker run -p 49160:8080 -d <your username>/boca-api`;
+- [ok] Using the web browser visit http://localhost:8080 and then http://localhost:49160;
+- [ok] List containers again: `docker container ls -a`;
+- [ok] To print the stdout of the container: `docker logs <container id>`;
+- [ok] To enter the container: `docker exec -it <container id> /bin/bash`
+- [ok] Stop the container: `docker stop <container id>`;
+- [ok] Run: `docker container ls -a`;
+- [ok] Then, remove it: `docker rm <container id>`;
+- [ok] Some alternatives:
+    `docker run -p 49160:8080 -d --name mycontainer <your username>/boca-api`
+    `docker run -p 49160:8080 --rm --name mycontainer <your username>/boca-api`
+- [ok] Stop all running containers;
+
