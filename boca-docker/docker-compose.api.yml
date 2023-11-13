@@ -41,5 +41,5 @@ services:
             context: .
             dockerfile: docker/dev/api/Dockerfile
         ports:
-            - 49162:8080
+            - 49160:8080
 

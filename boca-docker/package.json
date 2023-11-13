@@ -5,11 +5,23 @@
   "author_1": "Dionatas Brito <dionatas.santtos@gmail.com>",
   "author_2": "Luiza Laquini <luizablaquini@hotmail.com>",
   "license": "Apache 2.0",
-   "scripts": {
+  "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.18.2",
+    "mongoose": "^8.0.0",
     "pg": "^8.8.0"
+  },
+  "description": "[![Build and publish multi-platform_Docker images on ghcr.io workflow][build_publish_workflow_badge]][build_publish_workflow_link] [![Delete GitHub Actions cache for repository workflow][cache_cleanup_workflow_badge]][cache_cleanup_workflow_link] [![Delete_untagged_and/or_unsupported_Docker_images_on_ghcr.io_workflow][packages_cleanup_workflow_badge]][packages_cleanup_workflow_link] [![Close_stale_issues_and_PRs_workflow][close_stale_workflow_badge]][close_stale_workflow_link]",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
   }
 }
