@@ -41,6 +41,8 @@ services:
                     memory: 512M
             restart_policy:
                 condition: on-failure
+        networks:
+            - boca
 
     # online judge
     # boca-jail:
@@ -77,4 +79,12 @@ services:
                     cpus: '0.25'
                     memory: 1024M
             restart_policy:
+<<<<<<< HEAD
                 condition: on-failure
+=======
+                condition: on-failure
+        volumes:
+            - ./init:/docker-entrypoint-initdb.d
+        networks:
+            - boca
+>>>>>>> b95e15acf17eb1b92237ea70c0f55f0d41879bf3
