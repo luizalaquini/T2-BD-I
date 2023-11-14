@@ -29,17 +29,18 @@ services:
             - ADMINER_DEFAULT_SERVER=boca-db
         ports:
             - 8080:8080
-        networks:
-            - boca
 
 # volumes:
 #
 #     db-data:
+
     boca-api:
-        image: boca-api 
-        restart: unless-stopped
-        build:
+        image: boca-api:latest
+        build: 
             context: .
             dockerfile: docker/dev/api/Dockerfile
         ports:
-            - 49160:8080
+            - 49160:3000
+        depends_on:
+            boca-db:
+                condition: service_healthy

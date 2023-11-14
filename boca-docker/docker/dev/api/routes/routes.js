@@ -5,6 +5,8 @@ const contestTags = require("../controllers/method.js");
 const tags = new contestTags();
 
 // get
+routes.get("/", );
+
 routes.get("/api/contest/:id_c/tag", tags.show);
 // routes.get("/api/contest/:id_c/tag/:id_t", tags.show);
 
