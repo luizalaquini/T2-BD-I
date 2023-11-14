@@ -1,7 +1,7 @@
 const db = require("../database/connection");
-const { handleError } = require("../utils/resultHandler");
+const { handleError } = require("../utils/handleError.js");
 
-module.exports = {
+module.exports = class contestTags {
   index(req, res) {
     db.query("SELECT * FROM contesttable", (err, queryResult) => {
       if (err) {
@@ -9,7 +9,7 @@ module.exports = {
       }
       return res.json(queryResult.rows);
     });
-  },
+  }
 
   // GET
   show(req, res) {
@@ -32,31 +32,31 @@ module.exports = {
         return res.json(queryResult.rows);
       });
     }
-  },
+  }
 
-  // PUT
-  update(req, res) {
-    const { id_c, id_t } = req.params;
-    const { name, value } = req.body;
+//   // PUT
+//   update(req, res) {
+//     const { id_c, id_t } = req.params;
+//     const { name, value } = req.body;
 
-    db.query("UPDATE contest_tags SET name = $1, value = $2 WHERE contest_id = $3 AND tag_id = $4",
-      [name, value, id_c, id_t], (err, queryResult) => {
-        if (err) {
-          return handleError(err, res);
-        }
-        return res.json({ message: "Tag atualizada com sucesso!" });
-      });
-  },
+//     db.query("UPDATE contest_tags SET name = $1, value = $2 WHERE contest_id = $3 AND tag_id = $4",
+//       [name, value, id_c, id_t], (err, queryResult) => {
+//         if (err) {
+//           return handleError(err, res);
+//         }
+//         return res.json({ message: "Tag atualizada com sucesso!" });
+//       });
+//   }
 
-  // DELETE
-  delete(req, res) {
-    const { id_c, id_t } = req.params;
+//   // DELETE
+//   delete(req, res) {
+//     const { id_c, id_t } = req.params;
 
-    db.query("DELETE FROM contest_tags WHERE contest_id = $1 AND tag_id = $2", [id_c, id_t], (err, queryResult) => {
-      if (err) {
-        return handleError(err, res);
-      }
-      return res.json({ message: "Tag removida com sucesso!" });
-    });
-  },
-};
+//     db.query("DELETE FROM contest_tags WHERE contest_id = $1 AND tag_id = $2", [id_c, id_t], (err, queryResult) => {
+//       if (err) {
+//         return handleError(err, res);
+//       }
+//       return res.json({ message: "Tag removida com sucesso!" });
+//     });
+//   }
+ };

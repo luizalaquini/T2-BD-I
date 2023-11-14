@@ -1,7 +1,7 @@
 const db = require('./config');
 
 module.exports = {
-  connectToDatabase: function() {
+  connectDb: function() {
     return new Promise((resolve) => {
       db.connect((err) => {
         if (err) {
@@ -14,7 +14,7 @@ module.exports = {
     });
   },
 
-  executeQuery: async function(query, name = "") {
+  executeQueryDb: async function(query, name = "") {
     try {
       const result = await db.query(query);
       console.log(`Query ${name} executed successfully`);
