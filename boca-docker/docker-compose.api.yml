@@ -34,12 +34,11 @@ services:
 #
 #     db-data:
 
-    boca-api:
-        image: boca-api 
-        restart: unless-stopped
-        build:
-            context: .
-            dockerfile: docker/dev/api/Dockerfile
-        ports:
-            - 49160:8080
-
+# boca-api:
+#     image: boca-api 
+#     restart: unless-stopped
+#     build:
+#         context: .
+#         dockerfile: docker/dev/api/Dockerfile
+#     ports:
+#         - 49160:8080

@@ -23,6 +23,3 @@
         -    Server: boca-db
         -    Username: postgres
         -    Password: superpass
-
-    
-

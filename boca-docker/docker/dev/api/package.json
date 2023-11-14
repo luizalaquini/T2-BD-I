@@ -5,15 +5,16 @@
   "author_1": "Dionatas Brito <dionatas.santtos@gmail.com>",
   "author_2": "Luiza Laquini <luizablaquini@hotmail.com>",
   "license": "Apache 2.0",
- "scripts": {
+  "scripts": {
     "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-   "dependencies": {
+  "dependencies": {
     "body-parser": "1.20.2",
-    "express": "4.16.2"
+    "express": "4.16.2",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
-     "nodemon": "1.14.11"
+    "nodemon": "1.14.11"
   }
 }
