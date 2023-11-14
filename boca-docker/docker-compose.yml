@@ -29,6 +29,8 @@ services:
       - BOCA_DB_SUPER_PASSWORD=superpass
     ports:
       - 8000:80
+    networks:
+      - boca
 
   # online judge
   # boca-jail:
@@ -47,6 +49,10 @@ services:
       timeout: 5s # timeout for each health checking
       retries: 20 # how many times retries
       start_period: 5s # estimated time to boot
+    networks:
+      - boca
+
+
 
   # api
   boca-api:
@@ -55,7 +61,7 @@ services:
       boca-db:
         condition: service_healthy
     ports:
-      - 3000:3000
+      - 49160:3000
     build:
       context: .
       dockerfile: docker/dev/api/Dockerfile
@@ -63,6 +69,9 @@ services:
         - ENV_FILE=./docker/dev/api/.env
     env_file:
       - ./docker/dev/api/.env
+    networks:
+      - boca
+  
 
     restart: unless-stopped
     command: node server.js
@@ -73,3 +82,9 @@ services:
       - ADMINER_DEFAULT_SERVER=boca-db
     ports:
       - 8080:8080
+    networks:
+      - boca
+
+networks:
+  boca:
+    driver: bridge

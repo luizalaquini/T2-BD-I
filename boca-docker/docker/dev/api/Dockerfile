@@ -16,12 +16,14 @@
 
 FROM node:18
 
-WORKDIR /usr/src/app
+    WORKDIR /usr/src/app
 
-COPY docker/dev/api/package*.json ./
+    COPY docker/dev/api/package*.json ./
+    COPY docker/dev/api/server*.js ./
+    COPY docker/dev/api/ .
+    COPY . .
 
-RUN npm install
+    RUN npm install
 
-COPY docker/dev/api/ .
-
-EXPOSE 3000
+    EXPOSE 3000
+    CMD [ "node", "server.js", "npm start" ]
