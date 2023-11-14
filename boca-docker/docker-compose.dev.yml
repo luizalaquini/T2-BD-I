@@ -28,12 +28,16 @@ services:
         build: 
             context: .
             dockerfile: docker/dev/base/Dockerfile
+        networks:
+            - boca
 
     boca-web:
         image: boca-web:latest
         build: 
             context: .
             dockerfile: docker/dev/web/Dockerfile
+        networks:
+            - boca
         # CAUTION: this bind mount will overwrite BOCA website.
         # For future development...
         # volumes:
@@ -55,6 +59,8 @@ services:
             - ADMINER_DEFAULT_SERVER=boca-db
         ports:
             - 8080:8080
+        networks:
+            - boca
 
 # volumes:
 #
