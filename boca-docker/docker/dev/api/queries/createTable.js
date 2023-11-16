@@ -1,5 +1,5 @@
 // SQL command to create the "Tag" table
-const createTableDb = `
+const createTable_TAG = `
 DROP TABLE IF EXISTS "tagtable" CASCADE;
 CREATE TABLE "tagtable" (
     "tagid" serial PRIMARY KEY,
@@ -11,4 +11,4 @@ CREATE TABLE "tagtable" (
 );
 `;
 
-module.exports = { createTableDb };
+module.exports = { createTable_TAG };
