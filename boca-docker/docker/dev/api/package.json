@@ -6,7 +6,7 @@
   "author_2": "Luiza Laquini <luizablaquini@hotmail.com>",
   "license": "Apache 2.0",
   "scripts": {
-    "start": "nodemon",
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
