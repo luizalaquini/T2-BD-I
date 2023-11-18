@@ -14,30 +14,22 @@ const tags = new CRUD_tags();
 */
 
 
-/* GET 
-<webservice>/api/contest/{id_c}/tags
-<webservice>/api/contest/{id_c}/tag/{id_t}
-*/
-
+// GET Lista as tags associadas à competição dada pelo id_c
 routes.get("/api/contest/:id_c/tag", tags.read_tags);
-routes.get("/api/contest/:id_c/tag/:id_t", tags.read_tags);
 
+// GET Mostra a tag dada pelo id_t no contest id_c
+routes.get("/api/contest/:id_c/tag/:id_t", tags.read_tag_in_contest);
 
 /* POST
 <webservice>/api/contest/{id_c}/tag
 */
-routes.post("/api/contest/:id_c/tag/:id_t", tags.create_tags);
+routes.post("/api/contest/:id_c/tag", tags.create_tags);
 
-
-/* PUT
-<webservice>/api/contest/{id_c}/tag/{d_t}
-*/
+// PUT Atualiza a tag dada pelo id_t no contest id_c
 routes.put("/api/contest/:id_c/tag/:id_t", tags.update_tags);
 
 
-/* DELETE
-<webservice>/api/contest/{id_c}/tag/{d_t}
- */
+// DELETE Remove a tag dada pelo id_t no contest id_c
 routes.delete("/api/contest/:id_c/tag/:id_t", tags.delete_tags);
 
 
