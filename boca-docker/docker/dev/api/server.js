@@ -19,10 +19,8 @@ async function startAPI() {
  // res.send('Deu certo yupi');
 //});
 
-
-
    app.use(express.json())  //Configurando o middleware para análise de JSON
-   app.use('/',routes)          //Configurando o middleware para as rotas
+   app.use("/", routes)          //Configurando o middleware para as rotas
   // app.use('/document', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.listen(PORT, HOST, () => {
@@ -31,6 +29,10 @@ async function startAPI() {
 
   // Connect to database
   await connectDatabase();
+
+  app.get("/hello", (req, res) => {
+    res.send("hhssssh=sssda!");
+  })
 
   // Create table Tag
   try {
