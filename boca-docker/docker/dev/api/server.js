@@ -8,7 +8,8 @@ const routes = require('./routes/routes.js');
 // const swaggerUi = require('swagger-ui-express');
 // const swaggerDocument = require('./document/swagger.json'); // Arquivo Swagger gerado
 
-async function startAPI() {
+  require('dotenv').config(); //Carregando as variáveis de ambiente
+
   // Constantes
   const PORT = 3000;
   const HOST = '0.0.0.0';
@@ -23,24 +24,31 @@ async function startAPI() {
    app.use("/", routes)          //Configurando o middleware para as rotas
   // app.use('/document', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-  app.listen(PORT, HOST, () => {
-    console.log(`Server running on http://${HOST}:${PORT}`);
-  });
-
-  // Connect to database
-  await connectDatabase();
 
   app.get("/hello", (req, res) => {
-    res.send("hhssssh=sssda!");
+    return res.json({ message: "Hello World" }).status(200);
   })
 
-  // Create table Tag
-  try {
-    await executeQueryDatabase(createTable_TAG, "Tag");
-    console.log("Tag table created successfully")
-  } catch (error) {
-    console.error("Error creating Tag table: " + error);
-  }
-}
+  if(process.env.NODE_ENV === 'test') {
+    module.exports = app;
+  }else{
 
-startAPI();
+    // Connect to database
+    connectDatabase().then(() => {
+      console.log("Database connected successfully");
+    }).catch((error) => {
+      console.error("Error connecting to database: " + error);
+    });
+  
+    // Create table Tag
+    executeQueryDatabase(createTable_TAG, "Tag").then(() => {
+      console.log("Tag table created successfully")
+    }).catch((error) => {
+      console.error("Error creating Tag table: " + error);
+    });
+
+    app.listen(PORT, HOST, () => {
+      console.log(`Server running on http://${HOST}:${PORT}`);
+    });
+  }
+

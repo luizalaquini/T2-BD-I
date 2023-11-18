@@ -57,7 +57,7 @@ module.exports = class CRUD_tags {
 
       await tag.createTagElement(entityTag);
 
-      return res.json({ message: "Sucess: tag criada." })
+      return res.json({ message: "Sucess: tag criada." }).status(201);
     }
     catch (error) {
       console.error(error);
@@ -127,13 +127,19 @@ module.exports = class CRUD_tags {
       const tags = await tag.finTagsByContestId(id_c);
 
       if(tags.rowCount === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
+      const tagFromContest = tags.rows.filter(tag => tag.tagid == id_t)[0];
+      const tagToReturn = {
+        id: tagFromContest.tagid,
+        name: tagFromContest.name,
+        value: tagFromContest.value
+      }
 
       const entityTag = {
         entityTag: [
           {
             entityType: tags.rows[0].entitytype,
             entityId: tags.rows[0].entityid,
-            tag: tags.rows.filter(tag => tag.tagid == id_t)
+            tag: [tagToReturn]
           }
         ]
       }
@@ -178,7 +184,7 @@ module.exports = class CRUD_tags {
 
       await tag.updateTagTable(name, value, tagToUpdate[0].entitytype, tagToUpdate[0].entityid, tagToUpdate[0].tagid);
 
-      return res.json({ message: "Sucess: tag(s) atualizada(s)." });
+      return res.json({ message: "Sucess: tag(s) atualizada(s)." }).status(200);
     } catch (error) {
       console.error(error);
       return res.json(error)
@@ -203,7 +209,7 @@ module.exports = class CRUD_tags {
 
       await tag.deleteTagElement(id_t, tagTarget[0].entityid, tagTarget[0].entitytype, contestId);
 
-      return res.json({ message: "Sucess: tag(s) excluída(s)." })
+      return res.json({ message: "Sucess: tag(s) excluída(s)." }).status(200);
     }
     catch (error) {
       console.error(error);

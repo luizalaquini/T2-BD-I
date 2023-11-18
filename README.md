@@ -55,14 +55,14 @@ Root
        │
        └─── api
             │
-            └─── server.ts  - Aplicação principal  
+            └─── server.ts  - Aplicação principal 
+            └─── schemas - Onde esta o modelo de entrada de dados.  
             └─── controller - Onde estão os métodos de controle (CRUD).
             └─── database   - Onde estão as migrations e a definição do banco.
             └─── queries    - Onde estãos as queries/ comandos em SQL.
             └─── routes     - Rotas da aplicação
       
 ```
-<br/>
 <br/>
 <br/>
 
@@ -120,63 +120,161 @@ Requisições para a API devem seguir os padrões:
 A aplicação possui as determinadas rotas:
 
 ```js
-/* GET */
+/* GET Lista as tags associadas à competição dada pelo id_c*/
 
-localhost:49160/rota?
+localhost:49160/api/contest/:id_c/tag
 ```
+
+  <div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/getall.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
+
+---
 
 ```js
-/* POST */
+/* POST Cadastra uma nova tag associada à competição dada pelo id_c*/
 
-localhost:49160/rota?
+localhost:49160/api/contest/:id_c/tag
 ```
-```js
-/* GET */
 
-localhost:49160/rota?
-```
-```js
-/*PUT */
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/post.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
 
-localhost:49160/rota?
-```
-```js
-/*DELETE */
-
-localhost:49160/rota?
-```
+---
 
 <br/>
 <br/>
+
+```js
+/* GET Mostra a tag dada pelo id_t no contest id_c*/
+
+localhost:49160/api/contest/:id_c/tag/:id_t
+```
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/getone.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
+
+---
+
+<br/>
 <br/>
 
+```js
+/*PUT tualiza a tag dada pelo id_t no contest id_c*/
+
+localhost:49160/api/contest/:id_c/tag
+```
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/put.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
+
+---
+<br/>
+<br/>
+
+```js
+/*DELETE Remove a tag dada pelo id_t no contest id_c*/
+
+localhost:49160/api/contest/:id_c/tag/:id_t
+```
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/delete.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
 
 
-
+<br/>
+<br/>
 
 # 📚 Testes com a Aplicação
 
-[~~~~~~ ADICIONAR  XPICAÇÃO DE TESTES~~~~~~]
+Os testes são automatizados usando as bibliotecas jest e supertest. O jest fornece funções para comparação e basicamente
+comparamos se o resultado da chamada á aplicação é condizente com o retorno esperado. O supertest, fornece funções que são
+usados para fazer as chamadas na própria aplicação.
+
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/img2.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
+
+
+<br/>
+
+
+Executando os testes:
+
+        docker exec -it boca-docker-boca-api-1 npm run test
+
+
+São feitos 5 testes para verificar se as funções principais estão funcionando (que estão presents na especifícação do trabalho). Os testes se complementam, então todos eles manipulam a mesma entidade e no fim, rodamos o último teste que é DELETE para limpar as alterações feitas no banco de dados. Veja abaixo o exemplo do POST e do GET.
+
+  ```js
+
+  describe("POST /api/contest/:id_c/tag", () => {
+    it("Cadastra uma nova tag associada à competição dada pelo id_c", async () => {
+        const res = await request(app).post("/api/contest/3/tag").send({
+            tagId: 677,
+            name: "teste tag creation",
+            value: "some value",
+            entityId: "333",
+            entityType: "site",
+            contestId: 3
+        });
+        expect(res.statusCode).toBe(200); //Verifica se o retorno é okay
+    });
+  });
+
+```
+
+No código acima acabamos de criar uma tag de id 677 no contest de número 3.
+Então no próximo teste, um get, verificamos se essa tag existe no banco de dados.
+
+```js
+
+  describe("GET /api/contest/:id_c/tag/:id_t", () => {
+    it("Mostra a tag dada pelo id_t no contest id_c", async () => {
+        const res = await request(app).get("/api/contest/3/tag/677");
+        const queryResponse = res.body.entityTag[0];
+
+        expect(queryResponse.entityId).toBe('333');// Verifica se o id da entidade é 333
+        expect(queryResponse.tag[0].id).toBe(677);//Verifica se o id da tag é 677
+        expect(queryResponse.tag[0].name).toBe("teste tag creation");// Verifica se o name está correto
+        expect(queryResponse.tag[0].value).toBe("some value");// Verifica se o value está correto
+
+        expect(res.statusCode).toBe(200);
+    });
+  });
+
+```
+<br/>
+<br/>
+Imagem dos testes em execução abaixo:
+
+
+<div style="display: inline_block" align="center">
+  <img width="100%" src="./boca-docker/files/images/img3.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
 
 
 <br/>
 
 ### Respostas das requisições
 
+As respostas foram retiradas do seguinte link :
+
+ https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 <div style="display: inline_block" align="center">
-
-| Código | Descrição |
-|---|---|
-| `200` | Requisição executada com sucesso (success).|
-| `201` | Requisição executada com sucesso (success).|
-| `401` | Dados de acesso inválidos.|
-| `500` | Falha na execução.|
-<div style="display: inline_block" align="left">
+  <img width="100%" src="./boca-docker/files/images/img4.jpg">
+  <br /><br /> 
+  <div style="display: inline_block" align="left">
 
 
-
-<br/>
-<br/>
 <br/>
 
 # 🤝 Desenvolvedores
