@@ -17,7 +17,6 @@ REST.
 </div>
 <br/>
 <br/>
-<br/>
 
 # 💻 Pré-requisitos
 
@@ -70,18 +69,7 @@ Root
 
 Eu deixarei o projeto do João Fazolo  `boca-docker` clonado em meu projeto.
 
-Dentro do diretório `./boca-docker` e do diretório `./boca-docker/docker/dev/api` é necessário baixar as dependências do node_modules
-
-```bash
-# Instalar as depedências
-npm install 
-```
-ou
-```bash
-# Instalar as depedências
-yarn install
-```
-Com a dependência baixada, basta utilizar os seguintes comandos:
+Dentro do diretório `./boca-docker` e do diretório `./boca-docker/docker/dev/api` é necessário utilizar os seguintes comandos:
 
 ```bash
 # Buildar e Execultar os containers Docker
@@ -92,9 +80,6 @@ A porta a qual a aplicação foi atribuida é a `localhost:49160`.
 
 <br/>
 <br/>
-<br/>
-
-
 
 # ⚡ Métodos
 
