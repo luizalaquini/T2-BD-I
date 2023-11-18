@@ -20,6 +20,13 @@ function entity(e_t) {
   return isValid.includes(e_t);
 }
 
+const arrayEntityTypes = [
+    site,
+    siteUser,
+    problem,
+    language
+];
 
-module.exports = { problem, language, site, siteUser, entity }
+
+module.exports = { problem, language, site, siteUser, entity, arrayEntityTypes }
 
