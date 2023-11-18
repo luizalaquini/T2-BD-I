@@ -6,183 +6,208 @@
 //const para a manipulação entre rotas
 const contest = require("../queries/contest.js");
 const tag = require("../queries/tag.js");
-const {entity} = require("../queries/entitypes.js");
+const {entity, arrayEntityTypes} = require("../queries/entitypes.js");
+const tagSchema = require("../schemas/tagSchema.js");
+
+function createTag(params) {
+  return {
+    tagId: params.tagId,
+    name: params.name,
+    value: params.value,
+    entityId: params.entityId,
+    entityType: params.entityType,
+    contestId: params.contestId
+  }
+}
 
 module.exports = class CRUD_tags {
 
-
-  //criação de tags
+  //*criação de tags
   async create_tags(req, res) {
     try {
-      const { contestId } = req.params;
-      const { tagTable } = req.body; 
+      const { id_c } = req.params;
+      const body = req.body;
 
-      //se não passar o ID da compedição
-      if (contestId == null) {
-        return res.json({ error: 'Erro: Id da competição inserido é nulo!' });
+      if(!id_c) return res.json({ error: "Usuário não fornceu ID" }).status(400);
+      
+      const tagObj = {
+        tagId: body.tagId,
+        name: body.name,
+        value: body.value,
+        entityId: body.entityId,
+        entityType: body.entityType,
+        contestId: id_c
       }
+      
+      tagSchema.validateSync(tagObj);
 
-      const findId = await contest.findContestTable_ID(contestId);
+      if(!arrayEntityTypes.includes(tagObj.entityType))
+        return res.json({ error: "EntittyType inválido. Valores válido: 'site', 'site/user', 'problem', 'language'" }).status(400);
+
+      const findId = await contest.findContestTable_ID(id_c);
+
       const c_id = findId.rows[0];
 
       //se o Id da competição não for encontrado
-      if (c_id == null) {
+      if (c_id === null) {
         return res.json({ error: 'Erro: Id da competição não foi encontrado!' });
       }
 
-      for (const element of tagTable) {
-        const { entityType,entityId, entityName } = element;
+      const entityTag = createTag(tagObj);
 
-        if (!entityId || !entityType || !entityName) {
-          return res.json({ error: 'Erro: Id, Tipo ou Nome é inválido ' });
-        }
+      await tag.createTagElement(entityTag);
 
-        // Verifica se o tipo da entidade é válido
-        if (!entity(entityType)) {
-          return res.json({ error: `Erro: O tipo da entidade é inválido` });
-        }
-
-        // Insersão de tags
-        for (const ele of tag) {
-          const { id, name, value } = ele;
-
-          const values = [id, name, value, entityId, entityType, contestId];
-          await Tag.createTagElement(values);
-        }
-      }
-
-      res.json({ message: "Sucess: tag(s) criada(s)." })
+      return res.json({ message: "Sucess: tag criada." })
     }
     catch (error) {
       console.error(error);
-      res.json(error);
+      return res.json(error);
     }
   }
 
-  //leitura de tags
+  //* leitura de tags
   async read_tags(req, res) {
     try {
-      let { contestId, entityType, entityId } = req.params;
-      const { tagId, tagName, tagValue } = req.query;
+      let { id_c } = req.params;
 
-      if (!entityType) {
-        entityType = "site/user"
-        entityId = `${req.params.siteId}/${req.params.userId}` //id do site/ id do usuário
-      }
-      // Verificar se os parâmetros obrigatórios estão presentes
-      if (!contestId || !entityType || !entityId) {
-        return res.json({ error: 'Erro: Id contest, Tipo ou Nome da entidade é inválida' });
-      }
+      if(!id_c) return res.json({ error: "Usuário não fornceu ID" }).status(400);
 
       // Verificar se o contest existe
-      const findId = await contest.findContestTable_ID(contestId);
-      const id_c = findId.rows[0];
-      if (!id_c) {
-        return res.json({ error: 'Erro: Id da competição não foi encontrado!' });
+      const findId = await contest.findContestTable_ID(id_c);
+      const contestnumber = findId.rows[0];
+
+      if (!contestnumber) {
+        return res.json({ error: 'Erro: Id da competição não foi encontrado!' }).status(404);
       }
 
-      // Obter as tags da entidade
-      const entityTags = await Tag.getEntitype(entityType, entityId, tagId, tagName, tagValue);
-      // Formatar a resposta
-      const result = {
-        entityType,
-        entityTag: entityTags.map(tag => ({
-          entityId,
-          tag: {
-            id: tag.id,
-            name: tag.name,
-            value: tag.value
-          }
-        }))
-      };
+      const tags = await tag.finTagsByContestId(id_c);
 
-      res.json(result);
+      if(tags.rowCount === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
+
+      const entityTag = {
+        entityTag: [
+          {
+            entityType: tags.rows[0].entitytype,
+            entityId: tags.rows[0].entityid,
+            tag: tags.rows.map(tag => {
+              return {
+                id: tag.tagid,
+                name: tag.name,
+                value: tag.value
+              }
+            })
+          }
+        ]
+      }
+
+      return res.json(entityTag).status(200);
     } catch (error) {
       console.error(error);
-      res.json(error);
+      return res.json(error);
     }
   }
 
-  //atualização de tags
+  //* leitura de tags em uma competição
+  //ATENÇÃO: Apenas uma tag é retornada. E quando o contest não tem tags, retorna uma mensagem de erro
+  //mas poderia retornar sem msg de erro e array vazio no lugar das tags. Foi apenas um decisão de design
+  async read_tag_in_contest(req, res) {
+    try {
+      let { id_c, id_t } = req.params;
+
+      if(!id_c || !id_t) return res.json({ error: "Usuário não fornceu ID" }).status(400);
+
+      // Verificar se o contest existe
+      const findId = await contest.findContestTable_ID(id_c);
+      const contestnumber = findId.rows[0];
+
+      if (!contestnumber) {
+        return res.json({ error: 'Erro: Id da competição não foi encontrado!' }).status(404);
+      }
+
+      const tags = await tag.finTagsByContestId(id_c);
+
+      if(tags.rowCount === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
+
+      const entityTag = {
+        entityTag: [
+          {
+            entityType: tags.rows[0].entitytype,
+            entityId: tags.rows[0].entityid,
+            tag: tags.rows.filter(tag => tag.tagid == id_t)
+          }
+        ]
+      }
+
+      return res.json(entityTag).status(200);
+    } catch (error) {
+      console.error(error);
+      return res.json(error);
+    }
+  }
+
+  //*atualização de tags
   async update_tags(req, res) {
     try {
-      const { contestId } = req.params;
-      const { tagTable } = req.body; 
 
-      if (contestId == null) {
+      const contestId = req.params.id_c;
+      const tagId = req.params.id_t;
+
+      if (contestId === null) {
         return res.json({ error: 'Erro: Id da competição inserido é nulo!' });
+      }
+      if(tagId === null) {
+        return res.json({ error: 'Erro: Id da tag inserido é nulo!' });
       }
 
       const findId = await contest.findContestTable_ID(contestId);
       const c_id = findId.rows[0];
 
-      if (c_id == null) {
+      if (c_id === null) {
         return res.json({ error: 'Erro: Id da competição não foi encontrado!' });
       }
 
-      for (const element of tagTable) {
-        const { entityType,entityId, entityName } = element;
+      const tagsInContest = await tag.finTagsByContestId(contestId);
+      if(tagsInContest.rowCount === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
 
-        if (!entityId || !entityType || !entityName) {
-          return res.json({ error: 'Erro: Id, Tipo ou Nome é inválido ' });
-        }
+      const tagToUpdate = tagsInContest.rows.filter(tag => tag.tagid == tagId);
+      if(tagToUpdate.length === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
 
-        // Verifica se o tipo da entidade é válido
-        if (!entity(entityType)) {
-          return res.json({ error: `Erro: O tipo da entidade é inválido` });
-        }
+      const { name, value } = req.body;
 
+      if(!name || !value) return res.json({ error: "Nome ou valor não fornecido" }).status(400);
 
-        // Insere as novas tags para a entidade
-        for (const ele of tag) {
-          const { id, name, value } = ele;
-          await Tag.updateTagTable(name, value, entityType, entityId, id);
-        }
-      }
+      await tag.updateTagTable(name, value, tagToUpdate[0].entitytype, tagToUpdate[0].entityid, tagToUpdate[0].tagid);
 
-      res.json({ message: "Sucess: tag(s) atualizada(s)." });
+      return res.json({ message: "Sucess: tag(s) atualizada(s)." });
     } catch (error) {
       console.error(error);
-      res.json(error)
+      return res.json(error)
     }
   }
 
-  //remoção de tags
+  //*remoção de tags
   async delete_tags(req, res) {
     try {
-      const { contestId } = req.params;
-      const { tagTable } = req.body; 
 
-      if (contestId == null) {
+      const contestId = req.params.id_c;
+      const id_t = req.params.id_t;
+
+      if (contestId === null) {
         return res.json({ error: 'Erro: Id da competição inserido é nulo!' });
       }
 
-      for (const element of tagTable) {
-        const { entityType,entityId, entityName } = element;
+      const tagsInContest = await tag.finTagsByContestId(contestId);
+      const tagTarget = tagsInContest.rows.filter(tag => tag.tagid == id_t);
 
-        if (!entityId || !entityType || !entityName) {
-          return res.json({ error: 'Erro: Id, Tipo ou Nome é inválido ' });
-        }
+      if(tagTarget.length === 0) return res.json({ error: "Nenhuma tag encontrada" }).status(404);
 
-        // Verifica se o tipo da entidade é válido
-        if (!entity(entityType)) {
-          return res.json({ error: `Erro: O tipo da entidade é inválido` });
-        }
+      await tag.deleteTagElement(id_t, tagTarget[0].entityid, tagTarget[0].entitytype, contestId);
 
-        // deleta as tags para cada entidade
-        for (const ele of tag) {
-          const { id, name, value } = ele;
-
-          const values = [id, entityId, entityType, contestId];
-          await Tag.deleteTagElement(values);
-        }
-      }
-
-      res.json({ message: "Sucess: tag(s) excluída(s)." })
+      return res.json({ message: "Sucess: tag(s) excluída(s)." })
     }
     catch (error) {
       console.error(error);
-      res.json(error); 
+      return res.json(error); 
     }
 
   }
