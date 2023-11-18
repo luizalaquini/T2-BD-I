@@ -6,13 +6,26 @@ class Tag {
         return await db.query(`
             INSERT INTO tagtable (tagid,name,value,entityid,entitytype,contestid)
             VALUES ($1, $2, $3, $4, $5, $6)
-            `, params);
+            `, [params.tagId, params.name, params.value, params.entityId, params.entityType, params.contestId]);
+    }
+
+    async finTagsByContestId(id){
+        return await db.query(`SELECT * FROM tagtable WHERE contestid = $1`, [id]);
     }
 
     async findTagTable_All() {
         return await db.query('SELECT * FROM "tagtable";');
     }
 
+    /**
+     * 
+     * @param {*} name new name of tag
+     * @param {*} value new value of tag
+     * @param {*} entity_type entity type of entity that will be updated
+     * @param {*} entity_id entity id of entity that will be updated
+     * @param {*} id id of tag that will be updated
+     * @returns 
+     */
     async updateTagTable(name, value, entity_type, entity_id, id) {
         const query = `
         UPDATE tagtable
@@ -55,12 +68,19 @@ class Tag {
         return get_result.rows;
     }
 
+    /**
+     * 
+     * @param {number} tagid tag id of tag that will be deleted
+     * @param {string} entityid entity id
+     * @param {string} entitytype entity type
+     * @param {number} contestid contest id
+     * @returns Promise<QueryResult<any>>
+     */
+    async deleteTagElement(tagid, entityid, entitytype, contestid) {
 
-
-    async deleteTagElement(params) {
         return await db.query(`
         DELETE FROM tagtable WHERE tagid = $1 AND entityid = $2 AND entitytype = $3 AND contestid = $4
-        `, params);
+        `, [tagid, entityid, entitytype, contestid]);
     }
 
 }
