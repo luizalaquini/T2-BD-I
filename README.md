@@ -1,4 +1,9 @@
 # UFES20232BDCOMP
+![GitHub](https://img.shields.io/github/license/luizalaquini/T2-BD-I)
+![GitHub repo size](https://img.shields.io/github/repo-size/luizalaquini/T2-BD-I)
+![GitHub language count](https://img.shields.io/github/languages/count/luizalaquini/T2-BD-I)
+![GitHub top language](https://img.shields.io/github/languages/top/luizalaquini/T2-BD-I)
+![GitHub followers](https://img.shields.io/github/followers/luizalaquini?label=Follow&style=social)
 
 # 🔎 Especifícação do Trabalho
 
@@ -290,7 +295,7 @@ As respostas foram retiradas do seguinte link :
 
 # 📝 Licença
 
-Esse projeto está sob licença MIT. Veja o arquivo [LICENÇA](LICENSE) para mais detalhes.
+Esse projeto está sob licença Apache 2.0. Veja o arquivo [LICENÇA](LICENSE) para mais detalhes.
 
 <br/>
 
